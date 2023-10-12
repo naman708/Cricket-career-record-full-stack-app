@@ -11,7 +11,7 @@ exports.getAddProduct = (req, res) => {
 
 exports.addinfo= async(req, res) => {
   try{
-    const { Name,DOB,PhotoUrl,BirthPlace,Career,NoOfMatches} = req.body;
+    const { Name,DOB,PhotoUrl,BirthPlace,Career,NoOfMatches,Score,Fifties,Centuries,Wickets,Average} = req.body;
 
    const data=await Product.create({
     Name:Name,
@@ -20,6 +20,11 @@ exports.addinfo= async(req, res) => {
     BirthPlace:BirthPlace,
     Career:Career,
     NoOfMatches:NoOfMatches,
+    Score:Score,
+    Fifties:Fifties,
+    Centuries:Centuries,
+    Wickets:Wickets,
+    Average:Average,
   })
        
       res.status(201).json({playerinfo:data});
@@ -48,6 +53,18 @@ exports.searchdata=async(req,res)=>{
    const sdata= await Product.findByPk(uId);
    
    res.status(200).json({ userdetails: sdata });
+  }catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred while deleting appointments.');
+  }
+};
+exports.delrecord=async(req,res)=>{
+  try{
+    const uId=req.params.id;
+   // console.log(await Product.findByPk(uId));
+   const sdata= await Product.destroy({where:{Name:uId}});
+   
+   res.status(200)
   }catch (error) {
     console.error(error);
     res.status(500).send('An error occurred while deleting appointments.');

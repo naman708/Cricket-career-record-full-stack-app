@@ -28,6 +28,26 @@ const Product = sequelize.define('Cricket', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  Score: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+ Fifties: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  Centuries: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  Wickets: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  Average: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   
 });
 

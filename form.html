@@ -11,7 +11,7 @@
   <div class="container">
     <h1 class="title">Player Information</h1>
     <div class="card">
-    <div class="card-body">
+    <div class="card-body" id="cardbody">
       <form   id="form">
       <label for="name" class="form-label">Name :</label>
       <input type="text" id="name" name="name" class="form-control" required ><br>
@@ -25,35 +25,44 @@
       <textarea id="career" name="description" rows="4" class="form-control" required></textarea><br>
       <label for="matches" class="form-label">No Of Matches</label>
       <input type="text" id="matches" name="matches" class="form-control" required ><br>
+      <label for="score" class="form-label">Score</label>
+      <input type="text" id="score" name="score" class="form-control" required ><br>
+      <label for="fifties" class="form-label">Fifties</label>
+      <input type="text" id="fifties" name="fifties" class="form-control" required ><br>
+      <label for="century" class="form-label">Centuries</label>
+      <input type="text" id="century" name="century" class="form-control" required ><br>
+      <label for="wicket" class="form-label">Wicket</label>
+      <input type="text" id="wicket" name="wicket" class="form-control" required ><br>
+      <label for="avg" class="form-label">Average</label>
+      <input type="text" id="avg" name="avg" class="form-control" required ><br>
   
       <button type="submit" class="btn btn-dark">Submit</button>
       </form>
     </div>
   </div>
   <nav class="navbar navbar-expand-sm bg-light navbar-dark" id="nav">
-    <form  method="POST" id="formsearch" class="input-group">
-   <label for="pname" class="form-label">Player Name</label>
+    <form  id="formsearch" class="input-group">
+   <label for="pname" class="form-label">Player Name:</label>
    <input type="text" id="pname" name="pname"  required ><br>
    <button type="submit" class="btn btn-dark">Search</button>
-   <button type="" class="btn btn-sm float-right ml-5 " id="edit">Edit Info</button>
+   <button type="" class="btn  btn-danger btn-sm float-right ml-5 " id="edit">Edit Info</button>
  </form>
 </nav>
-<div class="container mt-5"> 
+<div class="container mt-5" id="details"> 
     <div class="row">
       <div class="col-sm-4" id="info">
-        <h1>Player Information</h1>
+        
         <img id="userImage" src="" alt="Player Image">
-        
-          <ul class="list-group-item" id="userlist1"></ul>
+        <div class="container" id="nameage">
 
-        
-          
-
+        </div>
+        <h4>Personal Information</h4>
+        <div class="container" id="pinfo"></div>
 
       </div>
       <div class="col-sm-8" id="about">
         <h2 class="mt-5">About Career</h2>
-        <ul class="list-group-item" id="userlist2"></ul>
+        <div class="container" id="careerinfo"></div>
 
 
       </div>
@@ -67,20 +76,37 @@
 <script >
   const form=document.getElementById('form');
   const userlist=document.getElementById('applist');
+  const detailstodisplay=document.getElementById('details');
+  const card=document.getElementById('cardbody');
+  card.style.backgroundColor='lightgrey';
+  detailstodisplay.style.display='none';
   const formSearch=document.getElementById('formsearch');
   formSearch.addEventListener('submit',search)
   function search(e){
     e.preventDefault();
     const pname=document.getElementById('pname').value;
+    const detailstodisplay=document.getElementById('details');
+    
+    //console.log(pname);
+    
     axios.get(`http://localhost:3000/search-player/${pname}`)
     .then((res)=>{
-      showuser(res.data.userdetails);
+      if(res.data.userdetails!=null){
+        detailstodisplay.style.display='block';
+        showuser(res.data.userdetails);
+        const personalInfoSection = document.getElementById('pinfo');
+        personalInfoSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      else{
+        console.log('Null')
+      }
+     
     })
     .catch((err)=>{
       console.log(err);
     })
     
-
+    const pname1=document.getElementById('pname').value='';
 
   };
 
@@ -96,42 +122,103 @@
      const BirthPlace=document.getElementById('birthplace').value;
      const Career=document.getElementById('career').value;
      const NoOfMatches=document.getElementById('matches').value
+     const Score=document.getElementById('score').value;
+     const Fifties=document.getElementById('fifties').value;
+     const Centuries=document.getElementById('century').value;
+     const Wickets=document.getElementById('wicket').value;
+     const Average=document.getElementById('avg').value;
+     console.log(Wickets);
     const obj={
       Name,
       DOB,
       PhotoUrl,
       BirthPlace,
       Career,
-      NoOfMatches
-      
+      NoOfMatches,
+      Score,
+      Fifties,
+      Centuries,
+      Wickets,
+      Average
     };
     axios.post("http://localhost:3000/add-info",obj)
     .then((response)=>{
-     // console.log(response.data);
+     console.log(response.data);
      // window.location.href = "display.html";
      //showuser(response.data.newuserdetails)
     })
     .catch((err)=>{
       console.log(err);
     })
-  
+    const name=document.getElementById('name').value='';
+    const dOB=document.getElementById('DOB').value='';
+    const photoUrl=document.getElementById('imageurl').value='';
+    const birthPlace=document.getElementById('birthplace').value='';
+    const career=document.getElementById('career').value='';
+    const noOfMatches=document.getElementById('matches').value='';
+    const score=document.getElementById('score').value='';
+    const fifties=document.getElementById('fifties').value='';
+    const centuries=document.getElementById('century').value='';
+    const wicket=document.getElementById('wicket').value='';
+    const average=document.getElementById('avg').value='';
+    
   };
 function showuser(user){
-
-  const userlist1=document.getElementById('userlist1');
-  const userlist2=document.getElementById('userlist2');
+  const editbtn=document.getElementById('edit');
+  
+  
   const userImage = document.getElementById('userImage');
     userImage.src = user ? user.PhotoUrl : '';
-  const li=document.createElement('li');
-  const div = document.createElement('div');
+  const div2 = document.getElementById('pinfo');
+  const div1=document.getElementById('nameage');
+  const div3=document.getElementById('careerinfo');
+  div2.style.backgroundColor='lightgrey';
+  div1.style.backgroundColor='black';
+  div1.style.color='white'
+  div1.innerHTML=`Name: ${user.Name}<br> DOB: ${user.DOB} <br>`;
 
-  div.innerHTML = `Name: ${user.Name}<br> DOB: ${user.DOB} <br> Birth Place:${user.BirthPlace}<br>No Of Matches:${user.NoOfMatches}<br>`;
+  div2.innerHTML = ` Birth Place:${user.BirthPlace}<br>No Of Matches:${user.NoOfMatches}<br>Score:${user.Score}<br>Fifties:${user.Fifties}<br>Centuries:${user.Centuries}<br>Wickets:${user.Wickets}<br>Average:${user.Average}<br>`;
   
-  li.appendChild(div);
-  userlist1.appendChild(li);
-const li1=document.createElement('li');
-li1.appendChild(document.createTextNode(`${user.Career}`));
-userlist2.appendChild(li1);
+  div3.innerHTML=`${user.Career}`;
+
+
+ editbtn.onclick=()=>{
+  const detailstodisplay=document.getElementById('details');
+  detailstodisplay.style.display='none';
+ // console.log('editbtn');
+  const Name=document.getElementById('name');
+  const DOB=document.getElementById('DOB');
+  const PhotoUrl=document.getElementById('imageurl');
+  const BirthPlace=document.getElementById('birthplace');
+  const Career=document.getElementById('career');
+  const NoOfMatches=document.getElementById('matches');
+  const Score=document.getElementById('score');
+  const Fifties=document.getElementById('fifties');
+  const Centuries=document.getElementById('century');
+  const Wickets=document.getElementById('wicket');
+  const Average=document.getElementById('avg');
+  Name.value=user.Name;
+  DOB.value=user.DOB;
+  PhotoUrl.value=user.PhotoUrl;
+  BirthPlace.value=user.BirthPlace;
+  Career.value=user.Career;
+  NoOfMatches.value=user.NoOfMatches;
+  Score.value=user.Score;
+  Fifties.value=user.Fifties;
+  Centuries.value=user.Centuries;
+  Wickets.value=user.Wickets;
+  Average.value=user.Average;
+
+  axios.delete(`http://localhost:3000/del-record/${user.Name}`)
+  .then((res)=>{
+    
+    console.log(res);
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+
+};
 
 }
 </script>
